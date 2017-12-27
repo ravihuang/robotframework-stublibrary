@@ -1,0 +1,8 @@
+robotframework
+psutil
+webtest>=2.0
+jsonpatch
+falcon
+                      
+jsonpointer
+allpairspy
