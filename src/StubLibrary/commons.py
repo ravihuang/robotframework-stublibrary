@@ -49,3 +49,13 @@ class Commons:
                 proc.kill()
                 return True
         return False        
+
+    def set_hosts(self,address,names,type='ipv4'):
+        from python_hosts import Hosts, HostsEntry
+        hosts = Hosts()
+        if isinstance(names,str):
+            names=[names]
+        print names
+        new_entry = HostsEntry(entry_type=type, address=address, names=names)    
+        hosts.add([new_entry])
+        hosts.write()        

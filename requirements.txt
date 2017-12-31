@@ -1,4 +1,5 @@
 robotframework
+py_fake_server
 psutil
 webtest>=2.0
 jsonpatch
