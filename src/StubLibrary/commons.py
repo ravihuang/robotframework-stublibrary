@@ -30,7 +30,7 @@ class Commons(object):
         l=list(AllPairs(parameters, **kwargs))
         return l
     
-    @keyword('md5sum')
+    @keyword(name='MD5 Sum')
     def md5sum(self,fname):
         """
         Calculating digital fingerprint of a file's 128-bit MD5 hashes
