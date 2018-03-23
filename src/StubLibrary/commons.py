@@ -53,6 +53,7 @@ class Commons(object):
         return False        
     @keyword
     def set_hosts(self,address,names,type='ipv4'):
+        '''add item to system hosts file'''
         from python_hosts import Hosts, HostsEntry
         hosts = Hosts()
         if isinstance(names,str):

@@ -57,6 +57,7 @@ class StubLibrary(DynamicCore):
         
     @keyword
     def create_server(self,url='http://127.0.0.1'):
+        '''create server with url'''
         url=urlparse.urlparse(url)
          
         stub=StubLibrary.__STUBS.get(url.scheme.lower(),None)
@@ -69,11 +70,14 @@ class StubLibrary(DynamicCore):
         return self.svr
     @keyword
     def close_server(self):
+        '''close current server'''
         self.svr.shutdown()
     @keyword
     def close_all_server(self,svr):
+        '''close all server'''
         for i in StubLibrary.__servers:
             i.shutdown()
     @keyword
     def switch_server(self,svr):
-        self.svr=svr    
+        '''switch server'''
+        self.svr=svr

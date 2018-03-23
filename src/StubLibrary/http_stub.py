@@ -105,6 +105,7 @@ class HTTP(falcon.API):
     def add_response(self,method,path,status=200, body = None, content_type = None,
                  headers = None, cookies = None,
                  json = None):
+        '''add response to path with method'''
         self._on_(method,path).response(status,body,content_type,headers,cookies,json)
 
     def _shutdown(self):
