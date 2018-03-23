@@ -14,14 +14,13 @@
 
 import os,urlparse
 
-from StubLibrary.http import HTTP
+from StubLibrary.http_stub import HTTP
 from StubLibrary.commons import Commons
+from .robotlibcore import DynamicCore, keyword
 
-__version_file_path__ = os.path.join(os.path.dirname(__file__), 'VERSION')
-__version__ = open(__version_file_path__, 'r').read().strip()
+__version__ = '0.1.0'
 
-
-class StubLibrary(Commons):
+class StubLibrary(DynamicCore):
     """
     Stub Library contains utilities meant for Robot Framework's usage.
 
@@ -49,6 +48,14 @@ class StubLibrary(Commons):
     __servers = []
     __STUBS={'http':HTTP}
     
+    def __init__(self):
+        libraries = [
+            HTTP(),
+            Commons()
+        ]
+        DynamicCore.__init__(self, libraries)
+        
+    @keyword
     def create_server(self,url='http://127.0.0.1'):
         url=urlparse.urlparse(url)
          
@@ -56,25 +63,17 @@ class StubLibrary(Commons):
         if stub is None:
             raise Exception("not support server: %s" % url.scheme)
 
-        self.svr=stub(url)
+        self.svr=stub().set_url(url)
         StubLibrary.__servers.append(self.svr)
 
         return self.svr
-
-    def create_route(self,method,path):
-        return self.svr.create_route(method,path)    
-
-    def set_response(self, status: int, body: Optional[str] = None, content_type: Optional[str] = None,
-                 headers: Optional[Dict[str, str]] = None, cookies: Optional[Dict[str, str]] = None,
-                 json: Optional[Dict] = None):
-        self.svr.set_response(status,body,content_type,headers,cookies,json)
-
+    @keyword
     def close_server(self):
         self.svr.shutdown()
-        
+    @keyword
     def close_all_server(self,svr):
         for i in StubLibrary.__servers:
             i.shutdown()
-            
+    @keyword
     def switch_server(self,svr):
         self.svr=svr    

@@ -3,8 +3,10 @@ import os,psutil
 import hashlib
 from robot.api.deco import keyword
 from allpairspy import AllPairs
+from robot.api.deco import keyword
 
-class Commons:
+class Commons(object):
+    @keyword
     def create_testcases(self,parameters,**kwargs):
         """
         Using parameters to create testcases by pairwise method
@@ -39,7 +41,7 @@ class Commons:
                 hash_md5.update(chunk)
         return hash_md5.hexdigest()
 
-
+    @keyword
     def kill_process(self,name):
         """
         Kill Processes by name
@@ -49,7 +51,7 @@ class Commons:
                 proc.kill()
                 return True
         return False        
-
+    @keyword
     def set_hosts(self,address,names,type='ipv4'):
         from python_hosts import Hosts, HostsEntry
         hosts = Hosts()

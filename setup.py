@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+#coding:utf-8
 #  Copyright (c) 2017 Ravi Huang
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,44 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
 """Setup script for Robot's StubLibrary distributions"""
+import re,os
+from os.path import abspath, dirname, join
+from setuptools import setup, find_packages
 
-from distutils.core import setup
+CURDIR = dirname(abspath(__file__))
 
-import setuptools
-import sys
-import os
+CLASSIFIERS = '''
+Development Status :: 2 - Pre-Alpha
+License :: OSI Approved :: Apache Software License
+Operating System :: OS Independent
+Programming Language :: Python
+Programming Language :: Python :: 2
+Programming Language :: Python :: 3
+Topic :: Software Development :: Testing
+Framework :: Robot Framework
+Framework :: Robot Framework :: Library
+'''.strip().splitlines()
 
-src_path = os.path.join(os.path.dirname(__file__), 'src')
-sys.path.insert(0, src_path)
-
-__version_file_path__ = os.path.join(src_path, 'StubLibrary', 'VERSION')
-__version__ = open(__version_file_path__, 'r').read().strip()
-
-def main():
-    setup(name         = 'robotframework-stublibrary',
-          version      = __version__,
-          description  = 'Stub utility library for Robot Framework',
-          author       = 'Ravi Huang',
-          author_email = 'ravi.huang@gmail.com',
-          url          = 'https://github.com/ravihuang/Robotframework-StubLibrary',
-          package_dir  = { '' : 'src'},
-          packages     = ['StubLibrary'],
-          package_data = {'StubLibrary': ['VERSION']},
-          requires     = ['robotframework']
-          )
-
-
-if __name__ == "__main__":
-    main()
+with open(join(CURDIR, 'src', 'StubLibrary', '__init__.py')) as f:
+    VERSION = re.search("\n__version__ = '(.*)'", f.read()).group(1)    
+with open(join(CURDIR, 'README.rst'),'rb') as f:
+    DESCRIPTION = str(f.read())
+with open(join(CURDIR, 'requirements.txt')) as f:
+    REQUIREMENTS = f.read().splitlines()
+setup(
+    name             = 'robotframework-stublibrary',
+    version          = VERSION,
+    description      = 'Stub utility library for Robot Framework',
+    long_description = DESCRIPTION,
+    author           = 'Ravi Huang',
+    author_email     = 'ravi.huang@gmail.com',
+    url              = 'https://github.com/ravihuang/Robotframework-StubLibrary',
+    license          = 'Apache License 2.0',
+    keywords         = 'robotframework testing testautomation Stub Http REST',
+    platforms        = 'any',
+    classifiers      = CLASSIFIERS,
+    install_requires = REQUIREMENTS,
+    package_dir      = {'': 'src'},
+    packages         = find_packages('src')
+)
