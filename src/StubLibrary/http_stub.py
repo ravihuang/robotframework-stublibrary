@@ -2,14 +2,16 @@
 httpstub - http stub
 
 """
-import sys
+from gevent import monkey, pywsgi  # import the monkey for some patching as well as the WSGI server
+monkey.patch_all(thread=False)  # make sure to do the monkey-patching before loading the falcon package!
+
+import os,sys,signal
 import webtest
 import falcon
-from webtest.http import StopableWSGIServer
+#from webtest.http import StopableWSGIServer
 from falcon_multipart.middleware import MultipartMiddleware
 from .endpoint import Endpoint
 from .statistic import Statistic, RequestedParams
-from .robotlibcore import DynamicCore, keyword
 
 class HTTP(falcon.API):
     """
@@ -17,16 +19,19 @@ class HTTP(falcon.API):
     """
     def __init__(self):
         super(HTTP,self).__init__(middleware=[MultipartMiddleware()]) 
-        
-    def set_url(url):
         self.req_options = self._get_request_options()
-        self._host = url.hostname
-        self._port = url.port if url.port else 80
+        self._host = None
+        self._port = 0
         self._endpoints = {}
         self._statistics = {}
         self.add_sink(self._handle_all)
-        self._server = StopableWSGIServer.create(self, host=self._host, port=self._port)
-
+    def create_server(self,url):        
+        self._host = url.hostname        
+        self._port = url.port if url.port else 80
+        #self._server = StopableWSGIServer.create(self, host=self._host, port=self._port)
+        self._server = pywsgi.WSGIServer((self._host, self._port), self)
+        self._server.start()   
+        return self
     @staticmethod
     def _get_request_options():
         options = falcon.RequestOptions()
@@ -101,14 +106,13 @@ class HTTP(falcon.API):
         statistic.exactly_0_times()
         return statistic
     
-    @keyword
     def add_response(self,method,path,status=200, body = None, content_type = None,
                  headers = None, cookies = None,
                  json = None):
         '''add response to path with method'''
         self._on_(method,path).response(status,body,content_type,headers,cookies,json)
 
-    def _shutdown(self):
-        self._server.shutdown()
+    def shutdown(self):
+        self._server.stop()
 
     

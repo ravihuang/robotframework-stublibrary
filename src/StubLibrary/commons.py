@@ -1,9 +1,8 @@
 # coding:utf-8
 import os,psutil 
 import hashlib
-from robot.api.deco import keyword
+from .robotlibcore import keyword
 from allpairspy import AllPairs
-from robot.api.deco import keyword
 
 class Commons(object):
     @keyword

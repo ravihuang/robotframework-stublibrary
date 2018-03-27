@@ -50,7 +50,6 @@ class StubLibrary(DynamicCore):
     
     def __init__(self):
         libraries = [
-            HTTP(),
             Commons()
         ]
         DynamicCore.__init__(self, libraries)
@@ -59,21 +58,27 @@ class StubLibrary(DynamicCore):
     def create_server(self,url='http://127.0.0.1'):
         '''create server with url'''
         url=urlparse.urlparse(url)
-         
         stub=StubLibrary.__STUBS.get(url.scheme.lower(),None)
         if stub is None:
             raise Exception("not support server: %s" % url.scheme)
 
-        self.svr=stub().set_url(url)
+        self.svr=stub().create_server(url)
         StubLibrary.__servers.append(self.svr)
-
         return self.svr
+    @keyword
+    def get_all_servers(self):
+        return StubLibrary.__servers
+    @keyword
+    def add_response(self,*args,**kwargs):
+        self.svr.add_response(*args,**kwargs)
+    
     @keyword
     def close_server(self):
         '''close current server'''
         self.svr.shutdown()
+        
     @keyword
-    def close_all_server(self,svr):
+    def close_all_server(self):
         '''close all server'''
         for i in StubLibrary.__servers:
             i.shutdown()
