@@ -22,8 +22,7 @@ class Commons(object):
         | ${l}    | Create List |  ${l1} |  ${l2}  |
         | ${x}    | Create Testcases | ${l} |
         | ${x}    | Create Testcases | ${l} |  n=1  |        
-        """         
-        print parameters
+        """
         if kwargs.has_key('n'):
             kwargs['n']=int(kwargs['n'])
         l=list(AllPairs(parameters, **kwargs))
@@ -57,7 +56,6 @@ class Commons(object):
         hosts = Hosts()
         if isinstance(names,str):
             names=[names]
-        print names
         new_entry = HostsEntry(entry_type=type, address=address, names=names)    
         hosts.add([new_entry])
         hosts.write()        
