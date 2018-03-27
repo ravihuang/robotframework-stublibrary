@@ -11,8 +11,10 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-import os,urlparse
+import os
+from six.moves.urllib.parse import urlparse, urlencode
+from six.moves.urllib.request import urlopen
+from six.moves.urllib.error import HTTPError
 
 from StubLibrary.http_stub import HTTP
 from StubLibrary.commons import Commons
@@ -57,7 +59,7 @@ class StubLibrary(DynamicCore):
     @keyword
     def create_server(self,url='http://127.0.0.1'):
         '''create server with url'''
-        url=urlparse.urlparse(url)
+        url=urlparse(url)
         stub=StubLibrary.__STUBS.get(url.scheme.lower(),None)
         if stub is None:
             raise Exception("not support server: %s" % url.scheme)

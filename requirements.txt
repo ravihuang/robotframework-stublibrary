@@ -3,7 +3,9 @@ psutil
 webtest>=2.0
 jsonpatch
 falcon
-                      
+     
+falcon-multipart                 
 jsonpointer
 allpairspy
 gevent
+six
