@@ -48,7 +48,7 @@ class StubLibrary(DynamicCore):
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     __servers = []
-    __STUBS={'http':HTTP}
+    __STUBS={'http':HTTP,'https':HTTP}
     
     def __init__(self):
         libraries = [
@@ -57,14 +57,14 @@ class StubLibrary(DynamicCore):
         DynamicCore.__init__(self, libraries)
         
     @keyword
-    def create_server(self,url='http://127.0.0.1'):
+    def create_server(self,url='http://127.0.0.1',**kwargs):
         '''create server with url'''
         url=urlparse(url)
         stub=StubLibrary.__STUBS.get(url.scheme.lower(),None)
         if stub is None:
             raise Exception("not support server: %s" % url.scheme)
 
-        self.svr=stub().create_server(url)
+        self.svr=stub().create_server(url,**kwargs)
         StubLibrary.__servers.append(self.svr)
         return self.svr
     @keyword

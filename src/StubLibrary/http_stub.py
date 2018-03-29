@@ -25,12 +25,19 @@ class HTTP(falcon.API):
         self._endpoints = {}
         self._statistics = {}
         self.add_sink(self._handle_all)
-    def create_server(self,url):        
+    def create_server(self,url,**kwargs): 
         self._host = url.hostname        
         self._port = url.port if url.port else 80
-        #self._server = StopableWSGIServer.create(self, host=self._host, port=self._port)
-        self._server = pywsgi.WSGIServer((self._host, self._port), self)
-        self._server.start()   
+        #self._server = StopableWSGIServer.create(self, host=self._host, port=self._port
+        if url.scheme=='https':
+            self._server = pywsgi.WSGIServer((self._host, self._port), self,
+                           keyfile=kwargs.get('keyfile',None),
+                           certfile=kwargs.get('certfile',None),
+                           ca_certs=kwargs.get('ca_certs',None),
+                           server_side=True)
+        else:
+            self._server = pywsgi.WSGIServer((self._host, self._port), self)
+        self._server.start() 
         return self
     @staticmethod
     def _get_request_options():
