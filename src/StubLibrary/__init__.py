@@ -20,7 +20,7 @@ from StubLibrary.http_stub import HTTP
 from StubLibrary.commons import Commons
 from .robotlibcore import DynamicCore, keyword
 
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 
 class StubLibrary(DynamicCore):
     """
