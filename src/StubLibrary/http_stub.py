@@ -105,7 +105,16 @@ class HTTP(falcon.API):
         route = (method.lower(), self.base_uri + url.rstrip("/"))
         self._statistics.setdefault(route, Statistic(route[0], route[1]))
         return self._statistics.get(route)
-
+    
+    def should_call_1_time(self, method, url):
+        return self.was_requested(method, url).requested_times==1
+             
+    def should_not_call(self, method, url):
+        return self.was_not_requested(method, url).requested_times==0
+    
+    def should_call_x_time(self, method, url,x):
+        return self.was_requested(method, url).requested_times==int(x)
+    
     def was_not_requested(self, method, url):
         route = (method.lower(), self.base_uri + url)
         self._statistics.setdefault(route, Statistic(route[0], route[1]))

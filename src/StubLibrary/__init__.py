@@ -19,6 +19,7 @@ from six.moves.urllib.error import HTTPError
 from StubLibrary.http_stub import HTTP
 from StubLibrary.commons import Commons
 from .robotlibcore import DynamicCore, keyword
+from robot.utils.asserts import assert_true, assert_false
 
 __version__ = '0.1.0'
 
@@ -88,3 +89,15 @@ class StubLibrary(DynamicCore):
     def switch_server(self,svr):
         '''switch server'''
         self.svr=svr
+    @keyword
+    def should_call_1_time(self, method, url,msg=None,svr=None):
+        tmp=svr if svr else self.svr
+        assert_true(tmp.should_call_1_time(method, url),msg)
+    @keyword
+    def should_not_call(self, method, url,msg=None,svr=None):
+        tmp=svr if svr else self.svr
+        assert_true(tmp.should_not_call(method, url),msg)
+    @keyword
+    def should_call_x_time(self, method, url,x,msg=None,svr=None):
+        tmp=svr if svr else self.svr
+        assert_true(tmp.should_call_x_time(method, url,x),msg)
