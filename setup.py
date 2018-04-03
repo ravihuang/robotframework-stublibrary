@@ -35,8 +35,8 @@ Framework :: Robot Framework :: Library
 
 with open(join(CURDIR, 'src', 'StubLibrary', '__init__.py')) as f:
     VERSION = re.search("\n__version__ = '(.*)'", f.read()).group(1)    
-with open(join(CURDIR, 'README.rst'),'rb') as f:
-    DESCRIPTION = str(f.read())
+with open(join(CURDIR, 'README.rst')) as f:
+    DESCRIPTION = f.read()
 with open(join(CURDIR, 'requirements.txt')) as f:
     REQUIREMENTS = f.read().splitlines()
 setup(

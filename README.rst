@@ -54,7 +54,7 @@ mostly a wrapper supposed to have a nice API)!
 Changelog
 ---------
 
-**v0.1.3**
+**v0.1.4**
 
 - new
 

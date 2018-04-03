@@ -21,7 +21,7 @@ from StubLibrary.commons import Commons
 from .robotlibcore import DynamicCore, keyword
 from robot.utils.asserts import assert_true, assert_false
 
-__version__ = '0.1.3'
+__version__ = '0.1.4'
 
 class StubLibrary(DynamicCore):
     """
