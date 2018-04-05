@@ -70,15 +70,13 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     """
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-    __servers = []
-    _STUBS={'http':HTTP,
-            'https':HTTP,
-            'sip':SIP}    
+    __SVRS__ = []
+    __STUBS__={'http':HTTP, 'https':HTTP, 'sip':SIP}
   
     def __init__(self,*args):
         if not args:
             args=['http']
-        l=[StubLibrary._STUBS[i]() for i in args]
+        l=[StubLibrary.__STUBS__[i]() for i in args]
         l.append(Commons())
         super(DynamicCore,self).__init__(l)
     
@@ -86,16 +84,16 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     def create_server(self,url='http://127.0.0.1',**kwargs):
         '''create server with url'''
         url=urlparse(url)
-        stub=StubLibrary._STUBS.get(url.scheme.lower(),None)
+        stub=StubLibrary.__STUBS__.get(url.scheme.lower(),None)
         if stub is None:
             raise Exception("not support server: %s" % url.scheme)
 
         self.svr=stub().create_server(url,**kwargs)
-        StubLibrary.__servers.append(self.svr)
+        StubLibrary.__SVRS__.append(self.svr)
         return self.svr
     @keyword
     def get_all_servers(self):
-        return StubLibrary.__servers
+        return StubLibrary.__SVRS__
     @keyword
     def add_response(self,*args,**kwargs):
         self.svr.add_response(*args,**kwargs)
@@ -108,7 +106,7 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     @keyword
     def close_all_server(self):
         '''close all server'''
-        for i in StubLibrary.__servers:
+        for i in StubLibrary.__SVRS__:
             i.shutdown()
     @keyword
     def switch_server(self,svr):
