@@ -1,3 +1,4 @@
+#coding:utf-8
 #  Copyright (c) 2010 Franz Allan Valencia See
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +18,39 @@ from six.moves.urllib.request import urlopen
 from six.moves.urllib.error import HTTPError
 
 from StubLibrary.http_stub import HTTP
+from StubLibrary.sip_stub import SIP
 from StubLibrary.commons import Commons
 from .robotlibcore import DynamicCore, keyword
 from robot.utils.asserts import assert_true, assert_false
+from robot.api import logger
+from functools import wraps
+from types import FunctionType
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 
-class StubLibrary(DynamicCore):
+#给每个方法添加svr参数
+def wrapper(method):
+    @wraps(method)
+    def wrapped(self,*args, **kwrds):
+        if 'svr' in kwrds:
+            self.svr=kwrds.pop('svr')
+        return method(self,*args, **kwrds)
+    return wrapped
+class MetaClass(type):
+    #装饰类中的每个方法
+    def __new__(meta, classname, bases, classDict):
+        newClassDict = {}
+        for attributeName, attribute in classDict.items():
+            if isinstance(attribute, FunctionType) and \
+               not attribute.__name__.startswith('__'):
+                attribute = wrapper(attribute)
+            newClassDict[attributeName] = attribute
+        return type.__new__(meta, classname, bases, newClassDict)
+    
+class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     """
     Stub Library contains utilities meant for Robot Framework's usage.
-
     This can allow you to stub a interface for your client test
-
 
     References:
 
@@ -40,28 +62,31 @@ class StubLibrary(DynamicCore):
 
     Example Usage:
     | # Setup |
-    | Create Server | http://127.0.0.1/if
+    | Create Server | http://127.0.0.1
     | # Guard assertion (verify that test started in expected state). |
-    | Add Route | /orders | {"name":"iphone","quantity":123}
+    | Add Response | /orders | json={"name":"iphone","quantity":123}
     | # Teardown |
-    | Close Server |
+    | Close All Server |
     """
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     __servers = []
-    __STUBS={'http':HTTP,'https':HTTP}
+    _STUBS={'http':HTTP,
+            'https':HTTP,
+            'sip':SIP}    
+  
+    def __init__(self,*args):
+        if not args:
+            args=['http']
+        l=[StubLibrary._STUBS[i]() for i in args]
+        l.append(Commons())
+        super(DynamicCore,self).__init__(l)
     
-    def __init__(self):
-        libraries = [
-            Commons()
-        ]
-        DynamicCore.__init__(self, libraries)
-        
     @keyword
     def create_server(self,url='http://127.0.0.1',**kwargs):
         '''create server with url'''
         url=urlparse(url)
-        stub=StubLibrary.__STUBS.get(url.scheme.lower(),None)
+        stub=StubLibrary._STUBS.get(url.scheme.lower(),None)
         if stub is None:
             raise Exception("not support server: %s" % url.scheme)
 
@@ -90,14 +115,11 @@ class StubLibrary(DynamicCore):
         '''switch server'''
         self.svr=svr
     @keyword
-    def should_call_1_time(self, method, url,msg=None,svr=None):
-        tmp=svr if svr else self.svr
-        assert_true(tmp.should_call_1_time(method, url),msg)
+    def should_call_1_time(self, method, url,msg=None):
+        assert_true(self.svr.should_call_1_time(method, url),msg)
     @keyword
     def should_not_call(self, method, url,msg=None,svr=None):
-        tmp=svr if svr else self.svr
-        assert_true(tmp.should_not_call(method, url),msg)
+        assert_true(self.svr.should_not_call(method, url),msg)
     @keyword
-    def should_call_x_time(self, method, url,x,msg=None,svr=None):
-        tmp=svr if svr else self.svr
-        assert_true(tmp.should_call_x_time(method, url,x),msg)
+    def should_call_x_time(self, method, url,x,msg=None):
+        assert_true(self.svr.should_call_x_time(method, url,x),msg)

@@ -1,0 +1,6 @@
+*** Settings ***
+Library           StubLibrary    sip
+
+*** Test Cases ***
+Case-01
+    hello sip    1111

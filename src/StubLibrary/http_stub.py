@@ -12,6 +12,7 @@ import falcon
 from falcon_multipart.middleware import MultipartMiddleware
 from .endpoint import Endpoint
 from .statistic import Statistic, RequestedParams
+from .robotlibcore import keyword
 
 class HTTP(falcon.API):
     """
