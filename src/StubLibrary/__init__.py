@@ -36,8 +36,7 @@ def wrapper(method):
         print method,args,method.__code__.co_varnames
         if 'svr' in method.__code__.co_varnames:
             svr=method.__code__.co_varnames.index('svr')
-            print svr,self,args[svr]
-            if svr>-1 and args[svr]!=None:
+            if args[svr]!=None:
                 args[0].svr=args[svr]
         return method(*args, **kwrds)
     return decorator(wrapped,method)
@@ -51,8 +50,7 @@ class MetaClass(type):
                 attribute = wrapper(attribute)
             newClassDict[attributeName] = attribute
         return type.__new__(meta, classname, bases, newClassDict)
-def execute(expression):
-    pass
+
 class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     """
     Stub Library contains utilities meant for Robot Framework's usage.

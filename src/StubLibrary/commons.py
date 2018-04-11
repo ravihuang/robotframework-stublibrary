@@ -58,4 +58,8 @@ class Commons(object):
             names=[names]
         new_entry = HostsEntry(entry_type=type, address=address, names=names)    
         hosts.add([new_entry])
-        hosts.write()        
+        hosts.write()
+    @keyword
+    @staticmethod
+    def execute(expression):
+        pass
