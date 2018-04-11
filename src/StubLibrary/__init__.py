@@ -117,12 +117,10 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
         self.svr=svr
     @keyword
     def should_call_1_time(self, method, url,svr=None,msg="should_call_1_time"):
-        print self.svr
         assert_true(self.svr.should_call_1_time(method, url),msg)
     @keyword
     def should_not_call(self, method, url,svr=None,msg=None):
         assert_true(self.svr.should_not_call(method, url),msg)
     @keyword
     def should_call_x_time(self, method, url,x,svr=None,msg="should_call_x_time"):
-        print self,self.svr
         assert_true(self.svr.should_call_x_time(method, url,x),msg)
