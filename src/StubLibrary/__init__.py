@@ -33,7 +33,6 @@ __version__ = '0.1.5'
 def wrapper(method):
     @wraps(method)
     def wrapped(self,*args, **kwrds):
-        print method,args,method.__code__.co_varnames
         if 'svr' in method.__code__.co_varnames:
             svr=method.__code__.co_varnames.index('svr')
             if args[svr]!=None:

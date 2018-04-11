@@ -1,5 +1,6 @@
 falcon
 
+decorator
 robotframework
 psutil
 webtest>=2.0
