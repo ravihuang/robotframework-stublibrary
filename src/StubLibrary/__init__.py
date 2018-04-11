@@ -25,6 +25,7 @@ from robot.utils.asserts import assert_true, assert_false
 from robot.api import logger
 from functools import wraps
 from types import FunctionType
+from decorator import decorator
 
 __version__ = '0.1.5'
 
@@ -32,10 +33,14 @@ __version__ = '0.1.5'
 def wrapper(method):
     @wraps(method)
     def wrapped(self,*args, **kwrds):
-        if 'svr' in kwrds:
-            self.svr=kwrds.pop('svr')
-        return method(self,*args, **kwrds)
-    return wrapped
+        print method,args,method.__code__.co_varnames
+        if 'svr' in method.__code__.co_varnames:
+            svr=method.__code__.co_varnames.index('svr')
+            print svr,self,args[svr]
+            if svr>-1 and args[svr]!=None:
+                args[0].svr=args[svr]
+        return method(*args, **kwrds)
+    return decorator(wrapped,method)
 class MetaClass(type):
     #装饰类中的每个方法
     def __new__(meta, classname, bases, classDict):
@@ -46,7 +51,8 @@ class MetaClass(type):
                 attribute = wrapper(attribute)
             newClassDict[attributeName] = attribute
         return type.__new__(meta, classname, bases, newClassDict)
-    
+def execute(expression):
+    pass
 class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     """
     Stub Library contains utilities meant for Robot Framework's usage.
@@ -113,11 +119,13 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
         '''switch server'''
         self.svr=svr
     @keyword
-    def should_call_1_time(self, method, url,msg=None):
+    def should_call_1_time(self, method, url,svr=None,msg="should_call_1_time"):
+        print self.svr
         assert_true(self.svr.should_call_1_time(method, url),msg)
     @keyword
-    def should_not_call(self, method, url,msg=None,svr=None):
+    def should_not_call(self, method, url,svr=None,msg=None):
         assert_true(self.svr.should_not_call(method, url),msg)
     @keyword
-    def should_call_x_time(self, method, url,x,msg=None):
+    def should_call_x_time(self, method, url,x,svr=None,msg="should_call_x_time"):
+        print self,self.svr
         assert_true(self.svr.should_call_x_time(method, url,x),msg)
