@@ -35,3 +35,10 @@ Case-01
     Should Call x Time    get    /things    1    svr=${y}
     Close All Server
 
+case-execute
+    ${l}    Create List
+    ${ns}    Create Dictionary    x=${l}
+    Execute    x.append(sys.__name__)    modules=sys    namespace=${ns}
+    log many    &{ns}[x]    ${l}
+    Should Be Equal    @{l}[0]    sys
+    Should Be Equal    @{l}[0]    sys
