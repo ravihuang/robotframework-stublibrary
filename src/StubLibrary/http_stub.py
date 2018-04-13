@@ -25,10 +25,11 @@ class HTTP(falcon.API):
         self._port = 0
         self._endpoints = {}
         self._statistics = {}
-        self.add_sink(self._handle_all)
+        
     def create_server(self,url,**kwargs): 
         self._host = url.hostname        
         self._port = url.port if url.port else 80
+        self.add_sink(self._handle_all,url.path if url.path else '/')
         #self._server = StopableWSGIServer.create(self, host=self._host, port=self._port
         if url.scheme=='https':
             self._server = pywsgi.WSGIServer((self._host, self._port), self,

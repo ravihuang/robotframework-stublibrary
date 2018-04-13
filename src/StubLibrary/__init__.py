@@ -13,21 +13,21 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 import os
+import psutil
+import hashlib
+from functools import wraps
+from types import FunctionType
+from decorator import decorator
 from six.moves.urllib.parse import urlparse, urlencode
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.error import HTTPError
+from robot.utils.asserts import assert_true, assert_false
+from robot.api import logger
+from allpairspy import AllPairs
 
 from StubLibrary.http_stub import HTTP
 from StubLibrary.sip_stub import SIP
 from .robotlibcore import DynamicCore, keyword
-from robot.utils.asserts import assert_true, assert_false
-from robot.api import logger
-from functools import wraps
-from types import FunctionType
-from decorator import decorator
-import psutil,hashlib
-from allpairspy import AllPairs
-
 __version__ = '0.1.5'
 
 #给每个方法添加svr参数
@@ -97,6 +97,10 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     @keyword
     def get_all_servers(self):
         return StubLibrary.__SVRS__
+    @keyword
+    def add_response_to_server(self,svr=None,*args,**kwargs):
+        self.svr.add_response(*args,**kwargs)
+        
     @keyword
     def add_response(self,*args,**kwargs):
         self.svr.add_response(*args,**kwargs)
