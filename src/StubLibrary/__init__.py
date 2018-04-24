@@ -188,6 +188,8 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     @staticmethod
     @keyword
     def execute(expression, modules=None, namespace=None):
+        if modules==u"None":
+            modules=None
         from robot.libraries.BuiltIn import BuiltIn
         from robot.utils import is_string
         bi=BuiltIn()

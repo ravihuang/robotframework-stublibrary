@@ -39,10 +39,10 @@ case-execute
     [Tags]    skip
     ${l}    Create List
     ${ns}    Create Dictionary    x=${l}
-    Execute    x.append(sys.__name__)    modules=sys    namespace=${ns}
+    Comment    Execute    x.append(sys.__name__)    modules=sys    namespace=${ns}
+    Execute    x.append('abc')    namespace=${ns}
     log many    &{ns}[x]    ${l}
-    Should Be Equal    @{l}[0]    sys
-    Should Be Equal    @{l}[0]    sys
+    Should Be Equal    @{l}[0]    abc
 
 Case-ZH-CN
     log    1.create server
