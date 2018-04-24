@@ -27,5 +27,5 @@ matrix:
         - ROBOTFRAMEWORK=3.0.2
         - INTERPRETER=python2
 script:
-  - pybot tests/
+  - pybot --exclude=skip tests/
 

@@ -36,9 +36,21 @@ Case-01
     Close All Server
 
 case-execute
+    [Tags]    skip
     ${l}    Create List
     ${ns}    Create Dictionary    x=${l}
     Execute    x.append(sys.__name__)    modules=sys    namespace=${ns}
     log many    &{ns}[x]    ${l}
     Should Be Equal    @{l}[0]    sys
     Should Be Equal    @{l}[0]    sys
+
+Case-ZH-CN
+    log    1.create server
+    ${x}    Create Server    http://0.0.0.0:8123
+    Add Response    get    /hello    json={"name":"苹果","quantity":123}
+    log    2.get
+    Create Session    crtsession    http://127.0.0.1:8123
+    ${resp}    Get Request    crtsession    /hello
+    log    ${resp.headers}
+    log    ${resp.content}
+    Should Be Equal    ${resp.text}    {"name": "苹果", "quantity": 123}

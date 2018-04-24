@@ -13,6 +13,7 @@ from falcon_multipart.middleware import MultipartMiddleware
 from .endpoint import Endpoint
 from .statistic import Statistic, RequestedParams
 from .robotlibcore import keyword
+import json as json_reader
 
 class HTTP(falcon.API):
     """
@@ -128,6 +129,8 @@ class HTTP(falcon.API):
                  headers = None, cookies = None,
                  json = None):
         '''add response to path with method'''
+        if json and isinstance(json,basestring):
+            json=json_reader.loads(json)
         self._on_(method,path).response(status,body,content_type,headers,cookies,json)
 
     def shutdown(self):
