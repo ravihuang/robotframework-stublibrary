@@ -28,6 +28,8 @@ from allpairspy import AllPairs
 from StubLibrary.http_stub import HTTP
 from StubLibrary.sip_stub import SIP
 from .robotlibcore import DynamicCore, keyword
+from robot.api import logger
+
 __version__ = '0.1.5'
 
 #给每个方法添加svr参数
@@ -109,12 +111,15 @@ class StubLibrary(MetaClass("DynamicCore", (DynamicCore,), {})):
     def close_server(self):
         '''close current server'''
         self.svr.shutdown()
+        StubLibrary.__SVRS__.remove(self.svr)
         
     @keyword
     def close_all_server(self):
         '''close all server'''
         for i in StubLibrary.__SVRS__:
             i.shutdown()
+            StubLibrary.__SVRS__.remove(i)
+        
     @keyword
     def switch_server(self,svr):
         '''switch server'''

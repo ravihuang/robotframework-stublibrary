@@ -28,4 +28,5 @@ matrix:
         - INTERPRETER=python2
 script:
   - pybot --exclude=skip tests/
+  - pytest --capture=no tests/
 

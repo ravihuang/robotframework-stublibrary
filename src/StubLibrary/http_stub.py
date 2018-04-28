@@ -5,16 +5,20 @@ httpstub - http stub
 from gevent import monkey, pywsgi  # import the monkey for some patching as well as the WSGI server
 monkey.patch_all(thread=False)  # make sure to do the monkey-patching before loading the falcon package!
 
-import os,sys,signal
+import os
+import sys
 import webtest
 import falcon
 #from webtest.http import StopableWSGIServer
 from falcon_multipart.middleware import MultipartMiddleware
+import json as json_reader
+from six import string_types
+from gevent.pool import Pool
+from robot.api import logger
+
 from .endpoint import Endpoint
 from .statistic import Statistic, RequestedParams
 from .robotlibcore import keyword
-import json as json_reader
-from six import string_types
 
 class HTTP(falcon.API):
     """
@@ -38,9 +42,10 @@ class HTTP(falcon.API):
                            keyfile=kwargs.get('keyfile',None),
                            certfile=kwargs.get('certfile',None),
                            ca_certs=kwargs.get('ca_certs',None),
-                           server_side=True)
+                           server_side=True,
+                           spawn=Pool())
         else:
-            self._server = pywsgi.WSGIServer((self._host, self._port), self)
+            self._server = pywsgi.WSGIServer((self._host, self._port), self,spawn=Pool())
         self._server.start() 
         return self
     @staticmethod
