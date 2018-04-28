@@ -1,6 +1,6 @@
 #coding:utf-8
 from StubLibrary import StubLibrary as x
-import os,urlparse
+import os
 import requests
 
 stub=None
