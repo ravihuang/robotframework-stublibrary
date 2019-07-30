@@ -5,27 +5,14 @@ install:
    - pip install falcon
    - python setup.py install
    - pip install robotframework-requests
+   - pip install -r requirements.txt
 matrix:
   include:
-    - python: "3.6"
+    - python: "3.7"
       env:
-        - ROBOTFRAMEWORK=3.0.2
+        - ROBOTFRAMEWORK=3.1.2
         - ROBOT_OPTIONS=--dotted
         - INTERPRETER=python3
-    - python: "pypy3.5"
-      env:
-        - ROBOTFRAMEWORK=3.0.2
-        - ROBOT_OPTIONS=--dotted
-        - INTERPRETER=pypy3
-    - python: "2.7"
-      env:
-        - ROBOTFRAMEWORK=2.9.2
-        - ROBOT_OPTIONS=--dotted
-        - INTERPRETER=python2
-    - python: "2.7"
-      env:
-        - ROBOTFRAMEWORK=3.0.2
-        - INTERPRETER=python2
 script:
   - pybot --exclude=skip tests/
   - pytest --capture=no tests/
