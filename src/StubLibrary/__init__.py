@@ -29,7 +29,7 @@ from decorator import decorator
 
 __version__ = '0.1.5'
 
-#给每个方法添加svr参数
+#add svr parameters to each method 
 def wrapper(method):
     @wraps(method)
     def wrapped(self,*args, **kwrds):
@@ -40,7 +40,7 @@ def wrapper(method):
         return method(*args, **kwrds)
     return decorator(wrapped,method)
 class MetaClass(type):
-    #装饰类中的每个方法
+    #decorate each method in class
     def __new__(meta, classname, bases, classDict):
         newClassDict = {}
         for attributeName, attribute in classDict.items():

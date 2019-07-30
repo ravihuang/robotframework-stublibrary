@@ -1,5 +1,4 @@
 falcon
-
 decorator
 robotframework
 psutil
@@ -8,5 +7,5 @@ jsonpatch
 falcon-multipart
 jsonpointer
 allpairspy
-gevent
+gevent>=1.5a1
 six
