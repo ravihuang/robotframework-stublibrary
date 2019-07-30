@@ -35,3 +35,22 @@ Case-01
     Should Call x Time    get    /things    1    svr=${y}
     Close All Server
 
+case-execute
+    [Tags]    skip
+    ${l}    Create List
+    ${ns}    Create Dictionary    x=${l}
+    Comment    Execute    x.append(sys.__name__)    modules=sys    namespace=${ns}
+    Execute    x.append('abc')    namespace=${ns}
+    log many    &{ns}[x]    ${l}
+    Should Be Equal    @{l}[0]    abc
+
+Case-ZH-CN
+    log    1.create server
+    ${x}    Create Server    http://0.0.0.0:8123
+    Add Response    get    /hello    json={"name":"苹果","quantity":123}
+    log    2.get
+    Create Session    crtsession    http://127.0.0.1:8123
+    ${resp}    Get Request    crtsession    /hello
+    log    ${resp.headers}
+    log    ${resp.content}
+    Should Be Equal    ${resp.text}    {"name": "苹果", "quantity": 123}

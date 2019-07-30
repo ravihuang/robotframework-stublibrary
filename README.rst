@@ -31,7 +31,46 @@ here is an example on how to use it:
 ============  ================
 Library       StubLibrary
 ============  ================
+\
 
+============  =================================  ===================================
+ Test Case    Action                             Argument
+============  =================================  ===================================
+Case-01             
+\             log    1.create server
+\             ${x}    Create Server    http://0.0.0.0:8123
+\             Add Response    get    /hello    body=Hello, 8123
+\             ${y}    Create Server    http://0.0.0.0:4567
+\             Add Response    get    /hello    body=Hello, 4567
+\             log    2.switch server
+\             Switch Server    ${x}
+\             Add Response    get    /things    body=------8123
+\             Switch Server    ${y}
+\             Add Response    get    /things    body=------4567
+\             log    3.create session
+\             Create Session    a    http://127.0.0.1:8123
+\             Create Session    b    http://127.0.0.1:4567
+\             log    4.get
+\             ${resp}    Get Request    a    /hello
+\             Should Be Equal    ${resp.text}    Hello, 8123
+\             ${resp}    Get Request    a    /things
+\             Should Be Equal    ${resp.text}    ------8123
+\             log    5,assertion1
+\             Switch Server    ${x}
+\             log    1111
+\             Should Call 1 Time    get    /hello
+\             log many    2222
+\             Should Call x Time    get    /things    0    svr=${y}
+\             log    ------
+\             ${resp}    Get Request    b    /hello
+\             Should Be Equal    ${resp.text}    Hello, 4567
+\             ${resp}    Get Request    b    /things
+\             Should Be Equal    ${resp.text}    ------4567
+\             log    6,assertion2
+\             Should Call x Time    get    /hello    1    svr=${y}
+\             Should Call x Time    get    /things    1    svr=${y}
+\             Close All Server
+============  =================================  ===================================
 Compatibility
 -------------
 This library is only tested on CPython. It might work on Jython, not sure.

@@ -63,7 +63,7 @@ class Endpoint:
 
         if json is not None:
             content_type = content_type or "application/json"
-            body = json_lib.dumps(json)
+            body = json_lib.dumps(json,ensure_ascii=False)
 
         self._append_data(status=status, body=body, content_type=content_type, headers=headers, cookies=cookies)
         return self
