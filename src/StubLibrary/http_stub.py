@@ -3,7 +3,7 @@ httpstub - http stub
 
 """
 from gevent import monkey, pywsgi  # import the monkey for some patching as well as the WSGI server
-monkey.patch_all(thread=False)  # make sure to do the monkey-patching before loading the falcon package!
+monkey.patch_all(thread=False)  # make sure to do the monkey-patching before loading the ssl or falcon or requests package!
 
 import os
 import sys
