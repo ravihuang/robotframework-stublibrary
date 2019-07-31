@@ -1,11 +1,11 @@
 language: python
 sudo: required
 dist: xenial
-install: 
-   - pip install falcon
+before_script:
+   - pip install -U pip
+install:    
    - python setup.py install
    - pip install robotframework-requests
-   - pip install -r requirements.txt
 matrix:
   include:
     - python: "3.7"
